@@ -1,0 +1,34 @@
+import os
+
+def search_files_for_info(directory, query):
+    results = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+            if query_in_file(file_path, query):
+                results.append(file_path)
+    return results
+
+def query_in_file(file_path, query):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+            if query.lower() in content.lower():
+                return True
+    except (IOError, UnicodeDecodeError):
+        # Handle file reading errors (e.g., permissions or non-text files)
+        pass
+    return False
+
+# Example usage
+search_query = "specific_information"
+search_directory = r"D:\Mude\university application\university application木德\master/csu.pdf"
+
+found_files = search_files_for_info(search_directory, search_query)
+
+if found_files:
+    print(f"Files containing '{search_query}':")
+    for file_path in found_files:
+        print(file_path)
+else:
+    print(f"No files containing '{search_query}' found.")
